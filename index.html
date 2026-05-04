@@ -565,10 +565,9 @@
       .footer-items { flex-direction: column; gap: 12px; }
     }
   
-    /* EDC AGNOSTIC LOGO MARQUEE */
+    /* EDC AGNOSTIC LOGO MARQUEE - TRUE CONTINUOUS LOOP */
     .mq-wrap {
-      padding: 20px 0 24px;
-      border-top: 0.5px solid rgba(255,255,255,0.1);
+      padding: 18px 0 36px;
       overflow: hidden;
       position: relative;
     }
@@ -579,29 +578,32 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 64px;
+      width: 80px;
       z-index: 2;
       pointer-events: none;
     }
 
     .mq-wrap::before {
       left: 0;
-      background: linear-gradient(90deg, #0A1221 0%, transparent 100%);
+      background: linear-gradient(90deg, #0d1b2a 0%, transparent 100%);
     }
 
     .mq-wrap::after {
       right: 0;
-      background: linear-gradient(270deg, #0A1221 0%, transparent 100%);
+      background: linear-gradient(270deg, #0d1b2a 0%, transparent 100%);
     }
 
     .mq-viewport {
       overflow: hidden;
+      width: 100%;
     }
 
     .mq-track {
       display: flex;
+      align-items: center;
       width: max-content;
-      animation: mq-scroll 32s linear infinite;
+      will-change: transform;
+      animation: mq-scroll var(--mq-duration, 32s) linear infinite;
     }
 
     .mq-wrap:hover .mq-track {
@@ -611,64 +613,48 @@
     .mq-group {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding-right: 10px;
+      gap: 48px;
+      padding-right: 48px;
+      flex-shrink: 0;
     }
 
-    .mq-pill {
-      height: 52px;
-      padding: 0 24px;
-      border-radius: 26px;
-      border: 0.5px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.95);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .mq-pill img {
-      height: 28px;
-      width: auto;
-      display: block;
+    .mq-group img {
+      height: 32px;
+      width: 120px;
       object-fit: contain;
+      opacity: 0.75;
+      filter: brightness(0) invert(1);
+      transition: opacity 0.2s;
+      flex-shrink: 0;
     }
 
-    .mq-pill.oracleReady img {
-      height: 34px;
+    .mq-group img:hover {
+      opacity: 1;
     }
 
     @keyframes mq-scroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
+      from { transform: translate3d(0, 0, 0); }
+      to   { transform: translate3d(calc(-1 * var(--mq-shift, 1000px)), 0, 0); }
     }
 
     @media (max-width: 900px) {
       .mq-wrap {
-        padding: 16px 0 18px;
+        padding: 22px 0;
       }
 
       .mq-wrap::before,
       .mq-wrap::after {
-        width: 32px;
-      }
-
-      .mq-pill {
-        height: 44px;
-        padding: 0 18px;
-        border-radius: 22px;
-      }
-
-      .mq-pill img {
-        height: 23px;
-      }
-
-      .mq-pill.oracleReady img {
-        height: 28px;
+        width: 36px;
       }
 
       .mq-group {
-        gap: 8px;
-        padding-right: 8px;
+        gap: 32px;
+        padding-right: 32px;
+      }
+
+      .mq-group img {
+        height: 24px;
+        width: 96px;
       }
     }
 
@@ -717,21 +703,12 @@
   <div class="mq-viewport">
     <div class="mq-track">
       <div class="mq-group">
-        <div class="mq-pill"><img src="images/Veeva-Systems-Logo-Vector.png" alt="Veeva"></div>
-        <div class="mq-pill"><img src="images/medidata-logo.png" alt="Medidata"></div>
-        <div class="mq-pill"><img src="images/medrio.png" alt="Medrio"></div>
-        <div class="mq-pill"><img src="images/openclinica.png" alt="OpenClinica"></div>
-        <div class="mq-pill oracleReady"><img src="images/oracleReady.png" alt="Oracle Health Sciences"></div>
-        <div class="mq-pill"><img src="images/Castor.png" alt="Castor"></div>
-      </div>
-
-      <div class="mq-group" aria-hidden="true">
-        <div class="mq-pill"><img src="images/Veeva-Systems-Logo-Vector.png" alt=""></div>
-        <div class="mq-pill"><img src="images/medidata-logo.png" alt=""></div>
-        <div class="mq-pill"><img src="images/medrio.png" alt=""></div>
-        <div class="mq-pill"><img src="images/openclinica.png" alt=""></div>
-        <div class="mq-pill oracleReady"><img src="images/oracleReady.png" alt=""></div>
-        <div class="mq-pill"><img src="images/Castor.png" alt=""></div>
+        <img src="images/Veeva-Systems-Logo-Vector.png" alt="Veeva" width="120" height="32">
+        <img src="images/medidata-logo.png" alt="Medidata" width="120" height="32">
+        <img src="images/medrio.png" alt="Medrio" width="120" height="32">
+        <img src="images/openclinica.png" alt="OpenClinica" width="120" height="32">
+        <img src="images/oracleReady.png" alt="Oracle Health Sciences" width="120" height="32">
+        <img src="images/Castor.png" alt="Castor" width="120" height="32">
       </div>
     </div>
   </div>
@@ -1055,5 +1032,70 @@
   function flipCard(card) { card.classList.add('flipped'); }
   function unflipCard(card) { card.classList.remove('flipped'); }
 </script>
+
+<script>
+  function initMarquee() {
+    const viewport = document.querySelector('.mq-viewport');
+    const track = document.querySelector('.mq-track');
+    const firstGroup = document.querySelector('.mq-group');
+
+    if (!viewport || !track || !firstGroup) return;
+
+    track.querySelectorAll('.mq-group[aria-hidden="true"]').forEach(g => g.remove());
+
+    const groupWidth = firstGroup.getBoundingClientRect().width;
+    const viewportWidth = viewport.getBoundingClientRect().width;
+
+    if (!groupWidth || !viewportWidth) return;
+
+    // Clone enough groups to fill viewport x3 so the loop is always invisible.
+    const clonesNeeded = Math.ceil((viewportWidth * 3) / groupWidth) + 2;
+
+    for (let i = 0; i < clonesNeeded; i++) {
+      const clone = firstGroup.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      clone.querySelectorAll('img').forEach(img => img.setAttribute('alt', ''));
+      track.appendChild(clone);
+    }
+
+    track.style.setProperty('--mq-shift', `${groupWidth}px`);
+
+    const duration = Math.max(18, groupWidth / 42);
+    track.style.setProperty('--mq-duration', `${duration}s`);
+
+    track.style.animation = 'none';
+    void track.offsetWidth;
+
+    requestAnimationFrame(() => {
+      track.style.removeProperty('animation');
+    });
+  }
+
+  // Wait for all marquee images to load before measuring their rendered width.
+  const marqueeImgs = Array.from(document.querySelectorAll('.mq-group img'));
+  const allLoaded = marqueeImgs.every(img => img.complete);
+
+  if (allLoaded) {
+    initMarquee();
+  } else {
+    let loaded = 0;
+
+    marqueeImgs.forEach(img => {
+      const markLoaded = () => {
+        loaded += 1;
+        if (loaded === marqueeImgs.length) initMarquee();
+      };
+
+      img.addEventListener('load', markLoaded, { once: true });
+      img.addEventListener('error', markLoaded, { once: true });
+    });
+  }
+
+  window.addEventListener('resize', () => {
+    clearTimeout(window.__mqResizeTimer);
+    window.__mqResizeTimer = setTimeout(initMarquee, 150);
+  });
+</script>
+
 </body>
 </html>
