@@ -565,7 +565,7 @@
       .footer-items { flex-direction: column; gap: 12px; }
     }
   
-    /* EDC AGNOSTIC LOGO MARQUEE - TRUE CONTINUOUS LOOP */
+    /* EDC AGNOSTIC MARQUEE - INLINE TEXT LOGOS, NO IMAGE FILE DEPENDENCIES */
     .mq-wrap {
       padding: 18px 0 36px;
       overflow: hidden;
@@ -613,23 +613,79 @@
     .mq-group {
       display: flex;
       align-items: center;
-      gap: 48px;
-      padding-right: 48px;
+      gap: 56px;
+      padding-right: 56px;
       flex-shrink: 0;
     }
 
-    .mq-group img {
-      height: 32px;
-      width: 120px;
-      object-fit: contain;
-      opacity: 0.75;
-      filter: brightness(0) invert(1);
-      transition: opacity 0.2s;
+    .mq-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 132px;
+      height: 34px;
+      color: rgba(255,255,255,0.68);
+      opacity: 0.82;
+      white-space: nowrap;
       flex-shrink: 0;
+      transition: opacity 0.2s ease, color 0.2s ease;
+      font-family: 'Manrope', 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
     }
 
-    .mq-group img:hover {
+    .mq-logo:hover {
       opacity: 1;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .mq-logo.veeva {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.08em;
+    }
+
+    .mq-logo.medidata {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -0.06em;
+    }
+
+    .mq-logo.medrio {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.08em;
+    }
+
+    .mq-logo.openclinica {
+      min-width: 172px;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.055em;
+    }
+
+    .mq-logo.oracle {
+      min-width: 190px;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      text-transform: uppercase;
+    }
+
+    .mq-logo.oracle span:last-child {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      font-weight: 800;
+    }
+
+    .mq-logo.castor {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -0.05em;
     }
 
     @keyframes mq-scroll {
@@ -648,13 +704,38 @@
       }
 
       .mq-group {
-        gap: 32px;
-        padding-right: 32px;
+        gap: 36px;
+        padding-right: 36px;
       }
 
-      .mq-group img {
-        height: 24px;
-        width: 96px;
+      .mq-logo {
+        min-width: 108px;
+        height: 28px;
+        font-size: 18px;
+      }
+
+      .mq-logo.veeva,
+      .mq-logo.medrio {
+        font-size: 22px;
+      }
+
+      .mq-logo.medidata,
+      .mq-logo.castor {
+        font-size: 20px;
+      }
+
+      .mq-logo.openclinica {
+        min-width: 138px;
+        font-size: 19px;
+      }
+
+      .mq-logo.oracle {
+        min-width: 148px;
+        font-size: 17px;
+      }
+
+      .mq-logo.oracle span:last-child {
+        font-size: 9px;
       }
     }
 
@@ -703,12 +784,12 @@
   <div class="mq-viewport">
     <div class="mq-track">
       <div class="mq-group">
-        <img src="images/Veeva-Systems-Logo-Vector.png" alt="Veeva" width="120" height="32">
-        <img src="images/medidata-logo.png" alt="Medidata" width="120" height="32">
-        <img src="images/medrio.png" alt="Medrio" width="120" height="32">
-        <img src="images/openclinica.png" alt="OpenClinica" width="120" height="32">
-        <img src="images/oracleReady.png" alt="Oracle Health Sciences" width="120" height="32">
-        <img src="images/Castor.png" alt="Castor" width="120" height="32">
+        <div class="mq-logo veeva" aria-label="Veeva">veeva</div>
+        <div class="mq-logo medidata" aria-label="Medidata">medidata</div>
+        <div class="mq-logo medrio" aria-label="Medrio">medrio</div>
+        <div class="mq-logo openclinica" aria-label="OpenClinica">OpenClinica</div>
+        <div class="mq-logo oracle" aria-label="Oracle Health Sciences"><span>Oracle</span><span>Health Sciences</span></div>
+        <div class="mq-logo castor" aria-label="Castor">castor</div>
       </div>
     </div>
   </div>
@@ -1048,13 +1129,12 @@
 
     if (!groupWidth || !viewportWidth) return;
 
-    // Clone enough groups to fill viewport x3 so the loop is always invisible.
     const clonesNeeded = Math.ceil((viewportWidth * 3) / groupWidth) + 2;
 
     for (let i = 0; i < clonesNeeded; i++) {
       const clone = firstGroup.cloneNode(true);
       clone.setAttribute('aria-hidden', 'true');
-      clone.querySelectorAll('img').forEach(img => img.setAttribute('alt', ''));
+      clone.querySelectorAll('[aria-label]').forEach(el => el.removeAttribute('aria-label'));
       track.appendChild(clone);
     }
 
@@ -1071,25 +1151,7 @@
     });
   }
 
-  // Wait for all marquee images to load before measuring their rendered width.
-  const marqueeImgs = Array.from(document.querySelectorAll('.mq-group img'));
-  const allLoaded = marqueeImgs.every(img => img.complete);
-
-  if (allLoaded) {
-    initMarquee();
-  } else {
-    let loaded = 0;
-
-    marqueeImgs.forEach(img => {
-      const markLoaded = () => {
-        loaded += 1;
-        if (loaded === marqueeImgs.length) initMarquee();
-      };
-
-      img.addEventListener('load', markLoaded, { once: true });
-      img.addEventListener('error', markLoaded, { once: true });
-    });
-  }
+  window.addEventListener('load', initMarquee);
 
   window.addEventListener('resize', () => {
     clearTimeout(window.__mqResizeTimer);
