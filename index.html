@@ -564,10 +564,10 @@
       .cta-banner { flex-direction: column; }
       .footer-items { flex-direction: column; gap: 12px; }
     }
-
-    /* EDC AGNOSTIC MARQUEE - IMAGE LOGOS */
+  
+    /* EDC AGNOSTIC MARQUEE - INLINE TEXT LOGOS, NO IMAGE FILE DEPENDENCIES */
     .mq-wrap {
-      padding: 32px 0;
+      padding: 18px 0 36px;
       overflow: hidden;
       position: relative;
     }
@@ -603,7 +603,7 @@
       align-items: center;
       width: max-content;
       will-change: transform;
-      animation: mq-scroll 48s linear infinite;
+      animation: mq-scroll var(--mq-duration, 32s) linear infinite;
     }
 
     .mq-wrap:hover .mq-track {
@@ -613,30 +613,43 @@
     .mq-group {
       display: flex;
       align-items: center;
-      gap: 48px;
-      padding-right: 48px;
+      gap: 56px;
+      padding-right: 56px;
       flex-shrink: 0;
     }
 
-    .mq-group img {
-      height: 32px;
-      width: auto;
-      max-width: 220px;
-      object-fit: contain;
-      opacity: 0.75;
-      filter: brightness(0) invert(1);
+    .mq-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      flex-shrink: 0;
+      opacity: 0.55;
       transition: opacity 0.2s ease;
-      display: block;
-      flex-shrink: 0;
+      filter: brightness(0) invert(1);
     }
 
-    .mq-group img:hover {
-      opacity: 1;
+    .mq-logo:hover {
+      opacity: 0.85;
     }
+
+    .mq-logo img {
+      height: 100%;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .mq-logo.veeva { height: 28px; }
+    .mq-logo.medidata { height: 26px; }
+    .mq-logo.medrio { height: 28px; }
+    .mq-logo.openclinica { height: 30px; }
+    .mq-logo.oracle { height: 36px; }
+    .mq-logo.castor { height: 28px; }
 
     @keyframes mq-scroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
+      from { transform: translate3d(0, 0, 0); }
+      to   { transform: translate3d(calc(-1 * var(--mq-shift, 1000px)), 0, 0); }
     }
 
     @media (max-width: 900px) {
@@ -650,16 +663,18 @@
       }
 
       .mq-group {
-        gap: 32px;
-        padding-right: 32px;
+        gap: 36px;
+        padding-right: 36px;
       }
 
-      .mq-group img {
-        height: 24px;
-        max-width: 160px;
-      }
+      .mq-logo { height: 22px; }
+      .mq-logo.veeva { height: 20px; }
+      .mq-logo.medidata { height: 18px; }
+      .mq-logo.medrio { height: 20px; }
+      .mq-logo.openclinica { height: 22px; }
+      .mq-logo.oracle { height: 26px; }
+      .mq-logo.castor { height: 20px; }
     }
-
 
   </style>
 </head>
@@ -706,21 +721,12 @@
   <div class="mq-viewport">
     <div class="mq-track">
       <div class="mq-group">
-        <img src="images/Veeva-Systems-Logo-Vector.png" alt="Veeva">
-        <img src="images/medidata-logo.png" alt="Medidata">
-        <img src="images/medrio.png" alt="Medrio">
-        <img src="images/openclinica.png" alt="OpenClinica">
-        <img src="images/oracleReady.png" alt="Oracle Health Sciences">
-        <img src="images/Castor.png" alt="Castor">
-      </div>
-
-      <div class="mq-group" aria-hidden="true">
-        <img src="images/Veeva-Systems-Logo-Vector.png" alt="">
-        <img src="images/medidata-logo.png" alt="">
-        <img src="images/medrio.png" alt="">
-        <img src="images/openclinica.png" alt="">
-        <img src="images/oracleReady.png" alt="">
-        <img src="images/Castor.png" alt="">
+        <div class="mq-logo veeva" aria-label="Veeva"><img src="https://raw.githubusercontent.com/ajschmutte/Vetryx-Website/main/images/Veeva-Systems-Logo-Vector.png" alt="Veeva" /></div>
+        <div class="mq-logo medidata" aria-label="Medidata"><img src="https://raw.githubusercontent.com/ajschmutte/Vetryx-Website/main/images/medidata-logo.png" alt="Medidata" /></div>
+        <div class="mq-logo medrio" aria-label="Medrio"><img src="https://raw.githubusercontent.com/ajschmutte/Vetryx-Website/main/images/medrio.png" alt="Medrio" /></div>
+        <div class="mq-logo openclinica" aria-label="OpenClinica"><img src="https://raw.githubusercontent.com/ajschmutte/Vetryx-Website/main/images/openclinica.png" alt="OpenClinica" /></div>
+        <div class="mq-logo oracle" aria-label="Oracle Health Sciences"><img src="https://raw.githubusercontent.com/ajschmutte/Vetryx-Website/main/images/oracleReady.png" alt="Oracle Health Sciences" /></div>
+        <div class="mq-logo castor" aria-label="Castor"><img src="https://raw.githubusercontent.com/ajschmutte/Vetryx-Website/main/images/Castor.png" alt="Castor" /></div>
       </div>
     </div>
   </div>
